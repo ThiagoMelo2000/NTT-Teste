@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "force-app",
+      "default": true
+    }
+  ],
+  "name": "NTTTEST",
+  "namespace": "",
+  "sfdcLoginUrl": "https://nttdata-72d-dev-ed.develop.my.salesforce.com",
+  "sourceApiVersion": "58.0"
+}
