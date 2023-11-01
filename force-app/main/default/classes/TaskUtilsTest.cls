@@ -2,10 +2,11 @@
 public with sharing class TaskUtilsTest {
     
     @IsTest
-    public static void shouldCreateTask(){
+    static void shouldCreateTask(){
         Account acc = new Account(
             Name = 'Test',
-            Type = AccountTypes.FINAL_CONSUMER
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910'
         );
         Database.insert(acc);
 
@@ -16,7 +17,7 @@ public with sharing class TaskUtilsTest {
     }
 
     @IsTest
-    public static void shouldNotCreateTask(){
+    static void shouldNotCreateTask(){
         try { 
             TaskUtils.createTask(null);
         } catch (Exception e) {

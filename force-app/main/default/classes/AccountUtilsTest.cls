@@ -2,35 +2,35 @@
 public with sharing class AccountUtilsTest {
     
     @IsTest
-    public static void shouldValidateCPFTrue(){
+    static void shouldValidateCPFTrue(){
         String cpf = '12345678910';
 
         Assert.isTrue(AccountUtils.validaCPF(cpf), 'CPF is not valid');
     }
 
     @IsTest
-    public static void shouldValidateCPFFalse(){
+    static void shouldValidateCPFFalse(){
         String cpf = '123acb789&';
 
         Assert.isFalse(AccountUtils.validaCPF(cpf), 'CPF is valid');
     }
 
     @IsTest
-    public static void shouldValidateCNPJTrue(){
+    static void shouldValidateCNPJTrue(){
         String cnpj = '12345678912345';
 
         Assert.isTrue(AccountUtils.validaCNPJ(cnpj), 'CNPJ is not valid');
     }
 
     @IsTest
-    public static void shouldValidateCNPJFalse(){
+    static void shouldValidateCNPJFalse(){
         String cnpj = '123456789123455451231654';
 
         Assert.isFalse(AccountUtils.validaCNPJ(cnpj), 'CNPJ is valid');
     }
 
     @IsTest
-    public static void shoudBlockAccountCreation(){
+    static void shoudBlockAccountCreation(){
         Account acc = new Account();
         
         try {

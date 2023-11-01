@@ -13,7 +13,7 @@ public with sharing class TaskSelectorTest {
     }
 
     @IsTest
-    public static void shouldSelectOpenTask(){
+    static void shouldSelectOpenTask(){
         Account acc = [SELECT Id FROM Account];
 
         Task newTask = new Task(
@@ -29,7 +29,7 @@ public with sharing class TaskSelectorTest {
     }
 
     @IsTest
-    public static void shouldSelectClosedTask(){
+    static void shouldSelectClosedTask(){
         Account acc = [SELECT Id FROM Account];
 
         Task newTask = new Task(
@@ -46,7 +46,7 @@ public with sharing class TaskSelectorTest {
     }
     
     @IsTest
-    public static void shouldNotSelectClosedTask(){
+    static void shouldNotSelectClosedTask(){
         Account acc = [SELECT Id FROM Account];
 
         Task newTask = new Task(

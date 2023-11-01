@@ -14,8 +14,6 @@ public with sharing class UpdateAccountInfosController {
             AccountNumber = accountNumber
         );
 
-        System.debug('acc:: ' + acc);
-
         Database.update(acc);
     }
 }

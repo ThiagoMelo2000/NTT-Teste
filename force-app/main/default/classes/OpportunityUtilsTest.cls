@@ -2,7 +2,7 @@
 public with sharing class OpportunityUtilsTest {
    
     @IsTest
-    public static void shouldCreateOpportunity(){
+    static void shouldCreateOpportunity(){
         Account acc = new Account(
             Name = 'Test',
             Type = AccountTypes.CPF,
@@ -19,7 +19,7 @@ public with sharing class OpportunityUtilsTest {
     }
 
     @IsTest
-    public static void shouldNotCreateOpportunity(){
+    static void shouldNotCreateOpportunity(){
         try {
             OpportunityUtils.createOppotunity(null);
         } catch (Exception e) {

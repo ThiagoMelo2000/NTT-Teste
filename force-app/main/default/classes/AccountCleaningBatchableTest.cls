@@ -13,7 +13,7 @@ public with sharing class AccountCleaningBatchableTest {
     }
     
     @IsTest
-    public static void shouldUpdateAccountToInactiveWithCloseOpp(){
+    static void shouldUpdateAccountToInactiveWithCloseOpp(){
         Account acc = [SELECT Id, Name, Inativa__c FROM Account];
 
         Opportunity opp = new Opportunity(
@@ -35,11 +35,13 @@ public with sharing class AccountCleaningBatchableTest {
     }
 
     @IsTest
-    public static void shouldUpdateAccountToInactiveWithOpenOpp(){
+    static void shouldUpdateAccountToInactiveWithOpenOpp(){
         Account acc = [SELECT Id, Name, Inativa__c FROM Account];
 
         Account accWithOpenOpp = new Account(
-            Name = 'Test2'
+            Name = 'Test2',
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910'
         );
         Database.insert(accWithOpenOpp);
 
@@ -72,7 +74,7 @@ public with sharing class AccountCleaningBatchableTest {
     }
 
     @IsTest
-    public static void shouldUpdateAccountToInactiveWithClosedTask(){
+    static void shouldUpdateAccountToInactiveWithClosedTask(){
 
         Account acc = [SELECT Id, Name, Inativa__c FROM Account];
 
@@ -95,12 +97,14 @@ public with sharing class AccountCleaningBatchableTest {
     }
 
     @IsTest
-    public static void shouldUpdateAccountToInactiveWithOpenTask(){
+    static void shouldUpdateAccountToInactiveWithOpenTask(){
 
         Account acc = [SELECT Id, Name, Inativa__c FROM Account];
 
         Account accWithOpenTask = new Account(
-            Name = 'Test2'
+            Name = 'Test2',
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910'
         );
         Database.insert(accWithOpenTask);
 

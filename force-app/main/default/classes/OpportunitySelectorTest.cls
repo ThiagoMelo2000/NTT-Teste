@@ -12,7 +12,7 @@ public with sharing class OpportunitySelectorTest {
     }
     
     @IsTest
-    public static void shouldSelectOpenOpps(){
+    static void shouldSelectOpenOpps(){
         Account acc = [SELECT Id, Name FROM Account];
 
         Opportunity opp = new Opportunity(
@@ -29,7 +29,7 @@ public with sharing class OpportunitySelectorTest {
     }
 
     @IsTest
-    public static void shouldSelectWonOpps(){
+    static void shouldSelectWonOpps(){
         Account acc = [SELECT Id, Name FROM Account];
         
         Opportunity opp = new Opportunity(

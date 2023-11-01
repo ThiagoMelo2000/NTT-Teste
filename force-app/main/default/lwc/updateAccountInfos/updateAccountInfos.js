@@ -1,13 +1,16 @@
-import { LightningElement, api, track } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import getAccount from '@salesforce/apex/UpdateAccountInfosController.getAccount';
 import updateAccount from '@salesforce/apex/UpdateAccountInfosController.updateAccount';
+import { updateRecord } from 'lightning/uiRecordApi';
+import { refreshApex } from '@salesforce/apex';
 
 export default class UpdateAccountInfos extends LightningElement {
     @api recordId;
-    @track accountName;
-    @track accountNumber;
-    @track accountType;
-    @track accountId;
+    @api accountName;
+    @api accountNumber;
+    @api accountType;
+    @api accountId;
+    wiredAccountResult;
 
     get typeOptions() {
         return [
@@ -16,55 +19,53 @@ export default class UpdateAccountInfos extends LightningElement {
         ];
     }
 
-    async connectedCallback() {
-        let data = {};
-        console.log('ID do Registro Atual: ' + this.recordId);
-        this.accountId = this.recordId;
-        
-        await getAccount({accountId: this.recordId})
-        .then(result => {
-            console.log('RESULT:: ', JSON.stringify(result));
-            data = result;
-        })
-
-        this.accountId = data.Id;
-        this.accountName = data.Name;
-        this.accountNumber = data.AccountNumber;
-        this.accountType = data.Type;
-    }
-
-    handleTypeChange(event){
+    handleTypeChange(event) {
         this.accountType = event.detail.value;
-        console.log('Tipo de Conta Alterado: ' + this.accountType);
     }
 
-    handleNameChange(event){
+    handleNameChange(event) {
         this.accountName = event.detail.value;
-        console.log('Nome da Conta Alterado: ' + this.accountName);
     }
 
-    handleNumberChange(event){
+    handleNumberChange(event) {
         this.accountNumber = event.detail.value;
-        console.log('Número da Conta Alterado: ' + this.accountNumber);
     }
 
-    handleClick(){
-        console.log('Botão "Salvar" Clicado');
-
+    handleClick() {
         updateAccount({
             name: this.accountName,
             type: this.accountType,
             accountNumber: this.accountNumber,
             accountId: this.accountId
         })
-        .then(result => {
-            console.log('Atualização Bem-Sucedida: ', JSON.stringify(result));
+        .then(() => {
+            return refreshApex(this.wiredAccountResult);
+        })
+        .then(() => {
+            const fields = {
+                Id: this.accountId,
+                Name: this.accountName,
+                AccountNumber: this.accountNumber,
+                Type: this.accountType
+            };
+
+            return updateRecord({ fields });
         })
         .catch(error => {
             console.error('Erro durante a atualização: ', JSON.stringify(error));
         });
+    }
 
-        console.log('Recarregando a Página');
-        location.reload();
+    @wire(getAccount, { accountId: '$recordId' })
+    wiredAccountData(result) {
+        this.wiredAccountResult = result;
+        if (result.data) {
+            this.accountId = result.data.Id;
+            this.accountName = result.data.Name;
+            this.accountNumber = result.data.AccountNumber;
+            this.accountType = result.data.Type;
+        } else if (result.error) {
+            console.error('Erro ao buscar os dados da conta: ', JSON.stringify(result.error));
+        }
     }
 }

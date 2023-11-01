@@ -27,7 +27,7 @@ public with sharing class AccountCleaningSchedulableTest {
     }
 
     @IsTest
-    public static void shouldExecuteSchedule(){
+    static void shouldExecuteSchedule(){
         String cronExp = '0 0 1,7,13,19 ? * MON-FRI';
 
         Test.startTest();
@@ -39,7 +39,7 @@ public with sharing class AccountCleaningSchedulableTest {
     }
 
     @IsTest
-    public static void shouldInactivateAccount(){
+    static void shouldInactivateAccount(){
         AccountCleaningBatchable batch = new AccountCleaningBatchable();
 
         Test.startTest();

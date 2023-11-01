@@ -6,28 +6,22 @@ global with sharing class AccountCleaningBatchable implements Database.Batchable
 
     global void execute(Database.BatchableContext context, List<Account> accounts){
         Set<Id> activeAccountIds = new Set<Id>();
-        Set<Id> accountsToDiscart = new Set<Id>();
         for(Account acc : accounts){
             activeAccountIds.add(acc.Id);
         }
 
         List<Account> accountsToUpdate = new List<Account>();
         List<Task> openTasks = TaskSelector.getInstance().selectOpensByAccountIds(activeAccountIds);
-        List<Opportunity> openOpps = OpportunitySelector.getInstance().selectInNegotiationByAccountIds(activeAccountIds);
         if(!openTasks.isEmpty()){
             for(Task openTask : openTasks){
-                accountsToDiscart.add(openTask.WhatId);
+                activeAccountIds.remove(openTask.WhatId);
             }
         } 
+        
+        List<Opportunity> openOpps = OpportunitySelector.getInstance().selectInNegotiationByAccountIds(activeAccountIds);
         if(!openOpps.isEmpty()){
             for(Opportunity opp : openOpps){
-                accountsToDiscart.add(opp.AccountId);
-            }
-        }
-
-        if(!accountsToDiscart.isEmpty()){
-            for(Id accountId : accountsToDiscart){
-                activeAccountIds.remove(accountId);
+                activeAccountIds.remove(opp.AccountId);
             }
         }
 

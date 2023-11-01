@@ -2,19 +2,24 @@
 public with sharing class AccountTriggerHandlerTest {
     
     @IsTest
-    public static void shouldValidateCPFTrue(){
+    static void shouldValidateCPFTrue(){
         Account acc = new Account(
             Name = 'Test',
             Type = AccountTypes.CPF,
             AccountNumber = '12345678910'
         );
 
-        Database.SaveResult result = Database.insert(acc);
-        Assert.isTrue(result.isSuccess(), 'Fail to create Account');
+        Database.SaveResult result; 
+        try {
+            result = Database.insert(acc);
+            Assert.isTrue(result.isSuccess(), 'Fail to create Account');
+        } catch (Exception e) {
+            Assert.fail('Fail to create Account');
+        }
     }
 
     @IsTest
-    public static void shouldValidateCPFFalse(){
+    static void shouldValidateCPFFalse(){
         Account acc = new Account(
             Name = 'Test',
             Type = AccountTypes.CPF,
@@ -24,18 +29,19 @@ public with sharing class AccountTriggerHandlerTest {
         Database.SaveResult result;
         try {
             result = Database.insert(acc);
+            Assert.fail('should fail account insert');
         } catch (Exception e) {
             Assert.isTrue(e.getMessage().contains('Número do cliente é inválido'));
         }
     }
 
     @IsTest
-    public static void shouldCreateOpportunity(){
+    static void shouldCreateOpportunity(){
         Account acc = new Account(
             Name = 'Test',
             Type = AccountTypes.CPF,
             AccountNumber = '12345678910',
-            RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Parceiro').getRecordTypeId()
+            RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(AccountRecordTypes.PARTNER).getRecordTypeId()
         );
 
         Database.insert(acc);
@@ -44,12 +50,12 @@ public with sharing class AccountTriggerHandlerTest {
     }
 
     @IsTest
-    public static void shouldCreateTask(){
+    static void shouldCreateTask(){
         Account acc = new Account(
             Name = 'Test',
             Type = AccountTypes.CPF,
             AccountNumber = '12345678910',
-            RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Consumidor Final').getRecordTypeId()
+            RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByDeveloperName().get(AccountRecordTypes.FINAL_CONSUMER).getRecordTypeId()
         );
 
         Database.insert(acc);
