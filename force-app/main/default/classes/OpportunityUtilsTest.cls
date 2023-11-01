@@ -5,7 +5,8 @@ public with sharing class OpportunityUtilsTest {
     public static void shouldCreateOpportunity(){
         Account acc = new Account(
             Name = 'Test',
-            Type = AccountTypes.PARTNER
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910'
         );
         Database.insert(acc);
 

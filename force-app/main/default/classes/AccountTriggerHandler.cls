@@ -27,11 +27,11 @@ public with sharing class AccountTriggerHandler extends TriggerHandler {
         List<Account> partnerAccounts = new List<Account>();
         List<Account> finalConsumerAccounts = new List<Account>();
         for(Account acc : newAccounts){
-            if(acc?.Type == AccountTypes.PARTNER){
+            if(acc?.RecordTypeId == Schema.SObjectType.Account.getRecordTypeInfosByName().get('Parceiro').getRecordTypeId()){
                 partnerAccounts.add(acc);
             }
 
-            if(acc?.Type == AccountTypes.FINAL_CONSUMER){
+            if(acc?.RecordTypeId == Schema.SObjectType.Account.getRecordTypeInfosByName().get('Consumidor Final').getRecordTypeId()){
                 finalConsumerAccounts.add(acc);
             }
         }

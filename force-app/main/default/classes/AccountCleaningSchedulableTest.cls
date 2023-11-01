@@ -4,7 +4,9 @@ public with sharing class AccountCleaningSchedulableTest {
     @TestSetup
     static void setup(){
         Account acc = new Account(
-            Name = 'Test'
+            Name = 'Test',
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910'
         );
         Database.insert(acc);
 
@@ -34,5 +36,17 @@ public with sharing class AccountCleaningSchedulableTest {
         CronTrigger ct = [SELECT Id, CronExpression, TimesTriggered, NextFireTime FROM CronTrigger WHERE id = :jobId];
         Assert.areEqual(cronExp, ct.CronExpression);
         Test.stopTest();
+    }
+
+    @IsTest
+    public static void shouldInactivateAccount(){
+        AccountCleaningBatchable batch = new AccountCleaningBatchable();
+
+        Test.startTest();
+        Database.executeBatch(batch);
+        Test.stopTest();
+
+        Account updatedAccount = [SELECT Inativa__c FROM Account];
+        Assert.isTrue(updatedAccount.Inativa__c);
     }
 }

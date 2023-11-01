@@ -12,4 +12,8 @@ public with sharing class AccountSelector {
     public List<Account> selectAllActives(){
         return [SELECT Id, Type, AccountNumber, Inativa__c FROM Account WHERE Inativa__c = FALSE];
     }
+
+    public Account selectById(Id recordId){
+        return [SELECT Id, Name, Type, AccountNumber FROM Account WHERE Id = :recordId];
+    }
 }

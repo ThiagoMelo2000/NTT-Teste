@@ -33,7 +33,9 @@ public with sharing class AccountTriggerHandlerTest {
     public static void shouldCreateOpportunity(){
         Account acc = new Account(
             Name = 'Test',
-            Type = AccountTypes.PARTNER
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910',
+            RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Parceiro').getRecordTypeId()
         );
 
         Database.insert(acc);
@@ -45,7 +47,9 @@ public with sharing class AccountTriggerHandlerTest {
     public static void shouldCreateTask(){
         Account acc = new Account(
             Name = 'Test',
-            Type = AccountTypes.FINAL_CONSUMER
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910',
+            RecordTypeId = Schema.SObjectType.Account.getRecordTypeInfosByName().get('Consumidor Final').getRecordTypeId()
         );
 
         Database.insert(acc);

@@ -4,7 +4,9 @@ public with sharing class AccountCleaningBatchableTest {
     @TestSetup
     static void setup(){
         Account acc = new Account(
-            Name = 'Test'
+            Name = 'Test',
+            Type = AccountTypes.CPF,
+            AccountNumber = '12345678910'
         );
 
         Database.insert(acc);

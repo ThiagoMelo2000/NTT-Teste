@@ -1,0 +1,17 @@
+<template>
+    <lightning-card class="card-container" icon-name="standard:account" variant="base">
+        <div class="row">
+            <lightning-input name="name" label="Nome da conta" value={accountName} onchange={handleNameChange}></lightning-input>
+            <lightning-input name="accountNumber" label="Númro da conta" value={accountNumber} onchange={handleNumberChange}></lightning-input>
+            <lightning-combobox
+                name="type"
+                label="Tipo da conta?"
+                value={accountType}
+                options={typeOptions}
+                onchange={handleTypeChange}
+                required>
+            </lightning-combobox>
+        </div>
+        <lightning-button variant="brand" label="Salvar" title="Salvar" onclick={handleClick} class="button"></lightning-button>
+    </lightning-card>
+</template>
