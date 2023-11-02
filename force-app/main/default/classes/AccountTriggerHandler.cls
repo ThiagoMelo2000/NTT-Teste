@@ -38,7 +38,7 @@ public with sharing class AccountTriggerHandler extends TriggerHandler {
         }
 
         if(!partnerAccounts.isEmpty()){
-            OpportunityUtils.createOppotunity(partnerAccounts);
+            OpportunityUtils.createOpportunity(partnerAccounts);
         } else if(!finalConsumerAccounts.isEmpty()){
             TaskUtils.createTask(finalConsumerAccounts);
         }

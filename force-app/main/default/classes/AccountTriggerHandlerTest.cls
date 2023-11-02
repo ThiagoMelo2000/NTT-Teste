@@ -24,6 +24,24 @@ public with sharing class AccountTriggerHandlerTest {
     }
 
     @IsTest
+    static void shouldValidateCPFTrueWithMultipleAccounts(){
+        List<Account> accountsToCreate = new List<Account>();
+        for(Integer i = 0; i < 4; i++){
+            accountsToCreate.add(createAccountDraw());
+        }
+
+        List<Database.SaveResult> results; 
+        try {
+            results = Database.insert(accountsToCreate);
+            for(Database.SaveResult result : results){
+                Assert.isTrue(result.isSuccess());
+            }
+        } catch (Exception e) {
+            Assert.fail('Should create account');
+        }
+    }
+
+    @IsTest
     static void shouldValidateCPFFalse(){
         Account acc = createAccountDraw();
         acc.AccountNumber = 'dasda%%a4154';

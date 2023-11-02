@@ -8,7 +8,8 @@ public with sharing class OpportunitySelectorTest {
         Account acc = new Account(
             Name = 'Test',
             Type = AccountTypes.CPF,
-            AccountNumber = '12345678910'
+            AccountNumber = '12345678910',
+            RecordTypeId = partnerRecordTypeId
         );
         Database.insert(acc);
     }
@@ -17,14 +18,9 @@ public with sharing class OpportunitySelectorTest {
     static void shouldSelectOpenOpps(){
         Account acc = [SELECT Id, Name FROM Account];
 
-        Opportunity opp = new Opportunity(
-            Name = acc.Name + ' - opp Parceiro',
-            StageName = 'Negotiation/Review',
-            CloseDate = Date.today().addDays(30),
-            AccountId = acc.Id
-        );
-
-        Database.insert(opp);
+        Opportunity oppToUpdate = [SELECT StageName FROM Opportunity WHERE AccountId = :acc.Id];
+        oppToUpdate.StageName = 'Negotiation/Review';
+        Database.update(oppToUpdate);
 
         List<Opportunity> selectedOpps = OpportunitySelector.getInstance().selectInNegotiationByAccountIds(new Set<Id>{acc.Id});
         Assert.isFalse(selectedOpps.isEmpty());
@@ -32,32 +28,34 @@ public with sharing class OpportunitySelectorTest {
 
     @IsTest
     static void shouldSelectOpenOppsWithMultipleAccounts(){
-        List<Opportunity> oppsToCreate = new List<Opportunity>();
-
-        Account newAccount = new Account(
-            Name = 'Test',
-            Type = AccountTypes.CPF,
-            AccountNumber = '12345678910'
-        );
-        Database.insert(newAccount);
-
+        List<Account> accountsToCreate = new List<Account>();
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();
         Set<Id> accountIds = new Set<Id>();
-        List<Account> accounts = [SELECT Id, Name FROM Account];
 
-        for(Account acc : accounts){
-            accountIds.add(acc.Id);
-            oppsToCreate.add(new Opportunity(
-                Name = acc.Name + ' - opp Parceiro',
-                StageName = 'Negotiation/Review',
-                CloseDate = Date.today().addDays(30),
-                AccountId = acc.Id
+        for(Integer i = 0; i < 4; i++){
+            accountsToCreate.add(new Account(
+                Name = 'Test ' + i,
+                Type = AccountTypes.CPF,
+                AccountNumber = '12345678910',
+                RecordTypeId = partnerRecordTypeId
             ));
         }
+        Database.insert(accountsToCreate);
 
-        Database.insert(oppsToCreate);
+        for(Account acc : accountsToCreate){
+            accountIds.add(acc.Id);
+        }
+
+        List<Opportunity> openOpps = [SELECT StageName FROM Opportunity WHERE AccountId IN :accountIds];
+        for(Opportunity openOpp : openOpps){
+            openOpp.StageName = 'Negotiation/Review';
+            oppsToUpdate.add(openOpp);
+        }
+        Database.update(oppsToUpdate);
 
         List<Opportunity> selectedOpps = OpportunitySelector.getInstance().selectInNegotiationByAccountIds(accountIds);
         Assert.isFalse(selectedOpps.isEmpty());
+        Assert.areEqual(accountsToCreate.size(), selectedOpps.size());
     }
 
     @IsTest
@@ -79,31 +77,34 @@ public with sharing class OpportunitySelectorTest {
 
     @IsTest
     static void shouldSelectWonOppsWithMultipleAccounts(){
-        List<Opportunity> oppsToCreate = new List<Opportunity>();
-
-        Account newAccount = new Account(
-            Name = 'Test',
-            Type = AccountTypes.CPF,
-            AccountNumber = '12345678910'
-        );
-        Database.insert(newAccount);
-
+        List<Account> accountsToCreate = new List<Account>();
+        List<Opportunity> oppsToUpdate = new List<Opportunity>();
         Set<Id> accountIds = new Set<Id>();
-        List<Account> accounts = [SELECT Id, Name FROM Account];
 
-        for(Account acc : accounts){
-            accountIds.add(acc.Id);
-            oppsToCreate.add(new Opportunity(
-                Name = acc.Name + ' - opp Parceiro',
-                StageName = 'Closed Won',
-                CloseDate = Date.today().addDays(-125),
-                AccountId = acc.Id
+        for(Integer i = 0; i < 4; i++){
+            accountsToCreate.add(new Account(
+                Name = 'Test ' + i,
+                Type = AccountTypes.CPF,
+                AccountNumber = '12345678910',
+                RecordTypeId = partnerRecordTypeId
             ));
         }
+        Database.insert(accountsToCreate);
 
-        Database.insert(oppsToCreate);
+        for(Account acc : accountsToCreate){
+            accountIds.add(acc.Id);
+        }
+
+        List<Opportunity> openOpps = [SELECT StageName FROM Opportunity WHERE AccountId IN :accountIds];
+        for(Opportunity openOpp : openOpps){
+            openOpp.StageName = 'Closed Won';
+            openOpp.CloseDate = Date.today().addDays(-125);
+            oppsToUpdate.add(openOpp);
+        }
+        Database.update(oppsToUpdate);
 
         List<Opportunity> selectedOpps = OpportunitySelector.getInstance().selectWonByAccountIds(accountIds);
         Assert.isFalse(selectedOpps.isEmpty());
+        Assert.areEqual(accountsToCreate.size(), selectedOpps.size());
     }
 }

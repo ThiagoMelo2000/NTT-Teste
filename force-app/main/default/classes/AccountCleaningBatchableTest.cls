@@ -75,7 +75,6 @@ public with sharing class AccountCleaningBatchableTest {
 
     @IsTest
     static void shouldUpdateAccountToInactiveWithClosedTask(){
-
         Account acc = [SELECT Id, Name, Inativa__c FROM Account];
 
         Task newTask = new Task(
@@ -98,7 +97,6 @@ public with sharing class AccountCleaningBatchableTest {
 
     @IsTest
     static void shouldUpdateAccountToInactiveWithOpenTask(){
-
         Account acc = [SELECT Id, Name, Inativa__c FROM Account];
 
         Account accWithOpenTask = new Account(

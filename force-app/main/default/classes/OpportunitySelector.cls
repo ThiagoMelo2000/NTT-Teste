@@ -1,4 +1,5 @@
 public with sharing class OpportunitySelector {
+    @TestVisible
     private static OpportunitySelector INSTANCE = new OpportunitySelector();
 
     public static OpportunitySelector getInstance() {
