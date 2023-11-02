@@ -32,7 +32,7 @@ public with sharing class TaskSelectorTest {
     }
 
     @IsTest
-    static void shouldSelectOpenTaskWhithAccountList(){
+    static void shouldSelectOpenTaskWhithMultipleAccounts(){
         List<Account> accountsToCreate = new List<Account>();
         List<Task> tasksToCreate = new List<Task>();
         Set<Id> accountIds = new Set<Id>();
@@ -83,7 +83,7 @@ public with sharing class TaskSelectorTest {
     }
 
     @IsTest
-    static void shouldSelectClosedTaskWithAccountList(){
+    static void shouldSelectClosedTaskWithMultipleAccounts(){
         List<Account> accountsToCreate = new List<Account>();
         List<Task> tasksToCreate = new List<Task>();
         Set<Id> accountIds = new Set<Id>();

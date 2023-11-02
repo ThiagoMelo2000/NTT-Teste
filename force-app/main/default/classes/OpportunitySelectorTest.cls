@@ -31,7 +31,7 @@ public with sharing class OpportunitySelectorTest {
     }
 
     @IsTest
-    static void shouldSelectOpenOppsWithAccountList(){
+    static void shouldSelectOpenOppsWithMultipleAccounts(){
         List<Opportunity> oppsToCreate = new List<Opportunity>();
 
         Account newAccount = new Account(
@@ -78,7 +78,7 @@ public with sharing class OpportunitySelectorTest {
     }
 
     @IsTest
-    static void shouldSelectWonOppsWithAccountList(){
+    static void shouldSelectWonOppsWithMultipleAccounts(){
         List<Opportunity> oppsToCreate = new List<Opportunity>();
 
         Account newAccount = new Account(
