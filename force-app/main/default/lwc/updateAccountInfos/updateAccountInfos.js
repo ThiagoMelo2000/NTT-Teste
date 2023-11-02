@@ -1,15 +1,17 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import getAccount from '@salesforce/apex/UpdateAccountInfosController.getAccount';
 import updateAccount from '@salesforce/apex/UpdateAccountInfosController.updateAccount';
+import verifyInfos from '@salesforce/apex/UpdateAccountInfosController.verifyInfos';
 import { updateRecord } from 'lightning/uiRecordApi';
 import { refreshApex } from '@salesforce/apex';
 
 export default class UpdateAccountInfos extends LightningElement {
     @api recordId;
-    @api accountName;
-    @api accountNumber;
-    @api accountType;
-    @api accountId;
+    @track accountName;
+    @track accountNumber;
+    @track accountType;
+    @track accountId;
+    @track disableSave = false;
     wiredAccountResult;
 
     get typeOptions() {
@@ -21,14 +23,31 @@ export default class UpdateAccountInfos extends LightningElement {
 
     handleTypeChange(event) {
         this.accountType = event.detail.value;
+        this.handleInfos(this.accountType, this.accountNumber);
     }
 
     handleNameChange(event) {
-        this.accountName = event.detail.value;
+        if(event.detail.value == null){
+            this.disableSave = true;
+        } else{
+            this.handleInfos(this.accountType, this.accountNumber);
+            this.accountName = event.detail.value;
+        }
     }
 
     handleNumberChange(event) {
         this.accountNumber = event.detail.value;
+        this.handleInfos(this.accountType, event.detail.value);
+    }
+
+    async handleInfos(type, accountNumber){
+        await verifyInfos({
+            type: type,
+            accountNumber: accountNumber
+        })
+        .then(result => {
+            this.disableSave = !result
+        })
     }
 
     handleClick() {
@@ -52,7 +71,7 @@ export default class UpdateAccountInfos extends LightningElement {
             return updateRecord({ fields });
         })
         .catch(error => {
-            console.error('Erro durante a atualização: ', JSON.stringify(error));
+            console.error('Error to update account: ', JSON.stringify(error));
         });
     }
 
@@ -64,8 +83,11 @@ export default class UpdateAccountInfos extends LightningElement {
             this.accountName = result.data.Name;
             this.accountNumber = result.data.AccountNumber;
             this.accountType = result.data.Type;
+            if(result.AccountNumber == null || result.Name == null){
+                this.disableSave = true;
+            }
         } else if (result.error) {
-            console.error('Erro ao buscar os dados da conta: ', JSON.stringify(result.error));
+            console.error('Error to get account infos: ', JSON.stringify(result.error));
         }
     }
 }

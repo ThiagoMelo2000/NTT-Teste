@@ -38,8 +38,7 @@ global with sharing class AccountCleaningBatchable implements Database.Batchable
                 accountsToUpdate.add(updateAccount(opp.AccountId));
             }
         }
-
-        System.debug('accountsToUpdate:: ' + accountsToUpdate);
+        
         if(!accountsToUpdate.isEmpty()){
             Database.update(accountsToUpdate);
         }

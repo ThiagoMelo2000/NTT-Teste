@@ -1,5 +1,4 @@
 public with sharing class TaskUtils {
-   
     public static void createTask(List<Account> accounts){
         
         try {
@@ -16,8 +15,8 @@ public with sharing class TaskUtils {
                     Priority = 'Normal'
                 ));
             }
+
             Database.insert(tasksToCreate);
-            
         } catch (TaskUtilsException e) {
             throw new TaskUtilsException('Fail to create tasks: ' + e.getMessage());
         }

@@ -12,6 +12,18 @@ public with sharing class UpdateAccountInfosControllerTest {
     }
 
     @IsTest
+    static void shouldValidateTrue(){
+        Account acc = [SELECT Type, AccountNumber FROM Account];
+        Assert.isTrue(UpdateAccountInfosController.verifyInfos(acc.Type, acc.AccountNumber));
+    }
+
+    @IsTest
+    static void shouldValidateFalse(){
+        Account acc = [SELECT AccountNumber FROM Account];
+        Assert.isFalse(UpdateAccountInfosController.verifyInfos(AccountTypes.CNPJ, acc.AccountNumber));
+    }
+
+    @IsTest
     static void shouldReturnAccount(){
         Account acc = [SELECT Id FROM Account];
 

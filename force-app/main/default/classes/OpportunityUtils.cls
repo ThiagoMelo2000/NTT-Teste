@@ -1,5 +1,4 @@
 public with sharing class OpportunityUtils {
-    
     public static void createOppotunity(List<Account> accounts){
         
         try {
